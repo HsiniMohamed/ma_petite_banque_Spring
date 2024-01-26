@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="LayouTemplate">
+<head>
+<meta charset="utf-8">
+<title>Ma banque</title>
+</head>
+<body>
+	<div layout:fragment="pageContent">
+		<div class="row container mt-3">
+			<div class="col-md-6 ">
+				<div class="card mt-3">
+					<div class="card-header">Consultation d'un compte</div>
+					<div class="card-body">
+						<form th:action="@{/consulterCompte}" method="get">
+							<div class="form-group">
+								<label class="control-label">Code Compte: </label> <input
+									type="text" name="codeCpte" th:value="${codeCpte}">
+								<button type="submit" class="btn btn-sm btn-primary">Consulter</button>
+							</div>
+						</form>
+						<div class="text-danger" th:if="${exception}" th:text="${exception.getCustomMessage()}"></div>
+					</div>
+				</div>
+				<div class="card mt-3" th:if="${compte}">
+					<div class="card-header">Informations sur le compte</div>
+					<div class="card-body">
+					<div>
+							<label>Client: </label> <label class="badge bg-primary text-wrap "
+								th:text="${compte.client.nom}"> </label>
+						</div>
+						<div>
+							<label>Code: </label> <label class="badge bg-primary text-wrap"
+								th:text="${compte.codeCpte}"> </label>
+						</div>
+						<div>
+							<label>Solde: </label> <label class="badge bg-primary text-wrap"
+								th:text="${compte.solde}"> </label>
+						</div>
+						<div>
+							<label>Date de création: </label> <label
+								class="badge bg-primary text-wrap"
+								th:text="${compte.dateCreation}"> </label>
+						</div>
+						<div>
+							<label>type: </label> <label class="badge bg-primary text-wrap"
+								th:text="${compte.class.simpleName}"> </label>
+						</div>
+						<div th:if="${compte.class.simpleName=='CompteCourant'}">
+							<label>Découvert: </label> <label class="badge bg-primary text-wrap"
+								th:text="${compte.decouvert}"> </label>
+						</div>
+						<div th:if="${compte.class.simpleName=='CompteEpargne'}">
+							<label>Taux: </label> <label class="badge bg-primary text-wrap"
+								th:text="${compte.taux}"> </label>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="col-md-6" th:if="${compte}">
+				<div class="card mt-3">
+					<div class="card-header">Opérarions sur le compte</div>
+					<div class="card-body"></div>
+				</div>
+				<div class="card mt-3">
+					<div class="card-header">Liste des opérations</div>
+					<div class="card-body">
+					<table class="table">
+					<tr><th>Num</th><th>Type</th><th>Date</th><th>Montant</th>
+					</tr>
+					<tr th:each="o:${listeOperations}">
+					<td th:text="${o.numero}"></td>
+					<td th:text="${o.class.simpleName}"></td>
+					<td th:text="${o.dateOperation}"></td>
+					<td th:text="${o.montant}"></td>
+					</tr>
+					</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

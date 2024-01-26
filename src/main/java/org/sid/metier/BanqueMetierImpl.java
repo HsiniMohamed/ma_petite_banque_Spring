@@ -9,6 +9,7 @@ import org.sid.entities.CompteCourant;
 import org.sid.entities.Operation;
 import org.sid.entities.Retrait;
 import org.sid.entities.Versement;
+import org.sid.exceptions.MyCustomRuntimeException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class BanqueMetierImpl implements IBanqueMetier {
 	@Override
 	public Compte consulterCompte(String codeCpte) {
 		Compte cpte= compteRepository.findOneByCodeCompte(codeCpte);
-		if(cpte ==null)throw new RuntimeException("Compte introuvable");
+		if(cpte ==null)throw new MyCustomRuntimeException("Compte introuvable");
 		return cpte;
 	}
 
@@ -51,7 +52,7 @@ public class BanqueMetierImpl implements IBanqueMetier {
 		if(cpte instanceof CompteCourant)
 			faciliteCaisse=((CompteCourant) cpte).getDecouvert();
 		if(cpte.getSolde()+faciliteCaisse<montant)
-			throw new RuntimeException("Solde insuffisant");
+			throw new MyCustomRuntimeException("Solde insuffisant");
 		Retrait retrait = new Retrait(null, new Date(), montant, cpte);
 		operationRespository.save(retrait);
 		cpte.setSolde(cpte.getSolde()- montant);
