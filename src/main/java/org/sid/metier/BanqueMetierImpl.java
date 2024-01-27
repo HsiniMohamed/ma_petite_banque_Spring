@@ -39,7 +39,7 @@ public class BanqueMetierImpl implements IBanqueMetier {
 		Compte cpte = consulterCompte(codeCpte);
 		Versement versement = new Versement(null, new Date(), montant, cpte);
 		operationRespository.save(versement);
-		cpte.setSolde(montant);
+		cpte.setSolde(cpte.getSolde()+montant);
 		compteRepository.save(cpte);
 		
 		
@@ -62,6 +62,8 @@ public class BanqueMetierImpl implements IBanqueMetier {
 
 	@Override
 	public void virement(String codeCpte1, String codeCpte2, double montant) {
+		if(codeCpte1.equals(codeCpte2))		
+			throw new MyCustomRuntimeException("Impossible d'effectuer un virement sur le méme compte!");
 		retirer(codeCpte1, montant);
 		verser(codeCpte2, montant);
 	}
