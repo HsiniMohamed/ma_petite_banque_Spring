@@ -18,6 +18,12 @@ import org.sid.metier.IBanqueMetier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 import lombok.AllArgsConstructor;
 
@@ -41,42 +47,35 @@ public class MaBanqueApplication implements CommandLineRunner  {
 	@Override
 	public void run(String... args) throws Exception {
 		
-		/*
-		 * Client c1= iClientRepository.save(new Client("hsini", "gmail.com")); Client
-		 * c2= iClientRepository.save(new Client(null,"karin", "karimgmail.com",null));
-		 * Client c3= iClientRepository.save(new Client("baba", "babagmail.com"));
-		 * 
-		 * iClientRepository.findAll().forEach(c->{
-		 * System.out.println(c.getNom()+" "+c.getEmail()); });
-		 * 
-		 * Compte cp1 = iCompteRepository.save(new CompteCourant("c1",new Date(), 2345,
-		 * c1, null, 345)); Compte cp2 = iCompteRepository.save(new
-		 * CompteCourant("c2",new Date(), 2345, c3, null, 600)) ; Compte cp3 =
-		 * iCompteRepository.save(new CompteEpargne("c3", new Date(), 1000, c2, null,
-		 * 2.5));
-		 * 
-		 * iOperationRespository.save(new Versement(null, new Date(), 500, cp1));
-		 * iOperationRespository.save(new Versement(null, new Date(), 1000, cp1));
-		 * iOperationRespository.save(new Versement(null, new Date(), 2000, cp1));
-		 * iOperationRespository.save(new Versement(null, new Date(), 14000, cp2));
-		 * iOperationRespository.save(new Versement(null, new Date(), 7000, cp2));
-		 * iOperationRespository.save(new Versement(null, new Date(), 500, cp2));
-		 * iOperationRespository.save(new Versement(null, new Date(), 400, cp3));
-		 * iOperationRespository.save(new Versement(null, new Date(), 500, cp3));
-		 * iOperationRespository.save(new Versement(null, new Date(), 1500, cp3));
-		 * iOperationRespository.save(new Versement(null, new Date(), 4500, cp3));
-		 * 
-		 * iOperationRespository.save(new Retrait(null, new Date(), 500, cp1));
-		 * iOperationRespository.save(new Retrait(null, new Date(), 500, cp2));
-		 * iOperationRespository.save(new Retrait(null, new Date(), 500, cp3));
-		 * iOperationRespository.save(new Retrait(null, new Date(), 500, cp3));
-		 * iOperationRespository.save(new Retrait(null, new Date(), 500, cp2));
-		 * 
-		 * iBanqueMetier.verser("c1", 567890); iBanqueMetier.virement("c1", "c2",
-		 * 12345);
-		 */
+		
 
 	}
-
+	
+		
+	@Bean
+	CommandLineRunner commandLineRunner(JdbcUserDetailsManager jdbcUserDetailsManager) {
+		 PasswordEncoder passwordEncoder=passwordEncoder();
+		return args ->{
+			UserDetails u1= jdbcUserDetailsManager.loadUserByUsername("user11");
+			if (u1==null) 		
+			jdbcUserDetailsManager.createUser(
+					 User.withUsername("user11").password(passwordEncoder.encode("1234")).roles("USER").build()
+					 );
+			UserDetails u2= jdbcUserDetailsManager.loadUserByUsername("user22");
+			if (u2==null) 
+			jdbcUserDetailsManager.createUser(
+					 User.withUsername("user22").password(passwordEncoder.encode("1234")).roles("USER").build()
+					 );
+			UserDetails u3= jdbcUserDetailsManager.loadUserByUsername("admin2");
+			if (u3==null) 
+			jdbcUserDetailsManager.createUser(
+					 User.withUsername("admin2").password(passwordEncoder.encode("1234")).roles("USER","ADMIN").build()
+					 );
+		};
+	}
+	@Bean
+	PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 	
 }

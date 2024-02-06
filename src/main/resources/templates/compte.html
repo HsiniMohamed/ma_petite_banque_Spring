@@ -14,7 +14,7 @@
 				<div class="card mt-3">
 					<div class="card-header">Consultation d'un compte</div>
 					<div class="card-body">
-						<form th:action="@{/consulterCompte}" method="get">
+						<form th:action="@{/user/consulterCompte}" method="get">
 							<div class="form-group">
 								<label class="control-label">Code Compte: </label> <input
 									type="text" name="codeCpte" th:value="${codeCpte}">
@@ -63,11 +63,11 @@
 				</div>
 
 			</div>
-			<div class="col-md-6" th:if="${compte}">
-				<div class="card mt-3">
+			<div class="col-md-6"   th:if="${compte}">
+				<div class="card mt-3" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
 					<div class="card-header">Opérarions sur le compte</div>
 					<div class="card-body">
-						<form th:action="@{/saveOperation}" method="post">
+						<form th:action="@{/admin/saveOperation}" method="post">
 							<div class="mb-3">
 								<label>Compte</label> <input type="hidden" name="codeCpte"
 									th:value="${compte.codeCpte}"> <label

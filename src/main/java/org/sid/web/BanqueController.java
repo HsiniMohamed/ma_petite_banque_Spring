@@ -18,12 +18,18 @@ public class BanqueController {
 
 	private IBanqueMetier iBanqueMetier;
 
-	@GetMapping("/operations")
+	@GetMapping(path="/")
+	public String indexDefault() {
+		
+		return "redirect:/user/operations";
+	}
+	
+	@GetMapping("/user/operations")
 	public String index() {
 		return "compte";
 	}
 
-	@GetMapping("/consulterCompte")
+	@GetMapping("/user/consulterCompte")
 	public String consulter(Model model, 
 			@RequestParam(name = "codeCpte", defaultValue = "")String codeCpte,
 			@RequestParam(name = "page", defaultValue = "0") int page,
@@ -47,7 +53,7 @@ public class BanqueController {
 		return "compte";
 	}
 
-	@PostMapping("/saveOperation")
+	@PostMapping("/admin/saveOperation")
 	public String saveOperation(Model model, String typeOperation, String codeCpte, double montant, String codeCpte2) {
 
 		try {
@@ -61,11 +67,11 @@ public class BanqueController {
 			}
 		} catch (Exception e) {
 			model.addAttribute("error", e);
-			return "redirect:/consulterCompte?codeCpte="+codeCpte+"&error="+e.getMessage();
+			return "redirect:/user/consulterCompte?codeCpte="+codeCpte+"&error="+e.getMessage();
 
 		}
 
-		return "redirect:/consulterCompte?codeCpte="+codeCpte;
+		return "redirect:/user/consulterCompte?codeCpte="+codeCpte;
 
 	}
 }
